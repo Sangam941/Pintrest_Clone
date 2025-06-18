@@ -5,7 +5,7 @@ import { PinData } from './PinContext';
 
 export const UserAuthContext = createContext()
 
-const UserContext = ({ children }) => {
+export const UserContext = ({ children }) => {
     const [user, setuser] = useState([])
     const [isAuth, setisAuth] = useState(false)
     const [btnLoading, setbtnLoading] = useState(false)
@@ -86,5 +86,4 @@ const UserContext = ({ children }) => {
     )
 }
 
-export default UserContext
 export const UserData = () => { return useContext(UserAuthContext) }
