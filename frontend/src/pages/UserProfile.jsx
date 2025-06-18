@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import PinCard from '../components/PinCard'
 import { PinData } from '../context/PinContext'
-import { UserData } from '../context/userContext'
+import { UserData } from '../context/UserContext'
 
 const UserProfile = ({ user }) => {
     const params = useParams()
