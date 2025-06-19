@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
-const connectDB = mongoose.connect("mongodb://0.0.0.0/Pintrest_Clone")
-.then(()=>{
-    console.log("database connected successfully")
-}).catch((error)=>{
-    console.log(error)
-})
+const connectDB = async ()=>{
+    try {
+        await mongoose.connect(process.env.MONGO_URL)
+        console.log("database connected successfully...")
+    } catch (error) {
+        console.error("ERROR OCCURED IN YOUR CODE :: ",error)
+    }
+}
 
-export default connectDB
+
+export default connectDB 

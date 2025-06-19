@@ -1,18 +1,21 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import connectDB from './config/db.js'
 import userRouter from './routes/userRouter.js'
 import indexRouter from './routes/indexRouter.js'
 import pinRouter from './routes/pinRoutes.js'
 import cookieParser from 'cookie-parser'
 import cloudinary from 'cloudinary'
 import path from 'path'
+import connectDB from './config/db.js'
 
 dotenv.config()
+
+connectDB()
+
 cloudinary.v2.config({
     cloud_name : process.env.CLOUD_NAME,
     api_key : process.env.CLOUD_API,
-    api_secret : process.env.CLOUD_SECRET,
+    api_secret : process.env.CLOUD_SECRET, 
 })
 
 const app = express()
