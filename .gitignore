@@ -1,2 +1,18 @@
+# ==============================
+# Node / JavaScript
+# ==============================
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# ==============================
+# Env files
+# ==============================
 .env
-/node_modules
+backend/.env
+frontend/.env
+
+# ==============================
+# Build / Dist folders
+# ==============================
+frontend/dist
