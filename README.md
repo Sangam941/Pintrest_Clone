@@ -32,4 +32,4 @@ A Pinterest-like web application built using **MongoDB, Express, React, Node.js*
 `CLOUD_SECRET`  
 `PORT`  
 `MONGO_URL`  
-JWT_KEY = secret`
+`JWT_KEY = secret`
