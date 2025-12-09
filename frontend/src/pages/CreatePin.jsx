@@ -77,7 +77,7 @@ const CreatePin = () => {
             <input
               value={pin}
               onChange={(e) => { setpin(e.target.value) }}
-              className='common-input' type="pin" name="pin" id="pin" placeholder='Enter pin' required />
+              className='common-input' type="text" name="pin" id="pin" placeholder='Enter pin' required />
           </div>
 
           <button type='submit' className='common-btn mt-3' disabled={loading}>

@@ -15,7 +15,7 @@ const UserProfile = ({ user }) => {
 
     async function fetchUserDetails() {
         try {
-            const { data } = await axios.get(`/api/user/${params.id}`)
+            const { data } = await axios.get(`/user/${params.id}`)
             setUser(data)
         } catch (err) {
             console.log(err.message)

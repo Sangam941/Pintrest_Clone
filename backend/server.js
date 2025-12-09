@@ -5,8 +5,8 @@ import indexRouter from './routes/indexRouter.js'
 import pinRouter from './routes/pinRoutes.js'
 import cookieParser from 'cookie-parser'
 import cloudinary from 'cloudinary'
-import path from 'path'
 import connectDB from './config/db.js'
+import cors from 'cors'
 
 dotenv.config()
 
@@ -21,22 +21,19 @@ cloudinary.v2.config({
 const app = express()
 const port = process.env.PORT
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true,
+}));
+
+app.use(cookieParser())
 app.use(express.json())
 app.use(express.urlencoded({extended : true}))
-app.use(cookieParser())
 
 //using routes
 app.use("/api/", indexRouter)
 app.use("/api/user", userRouter)
-app.use("/api/pin", pinRouter)
-
-const __dirname = path.resolve()
-
-app.use(express.static(path.join(__dirname, "/frontend/dist")))
-
-app.get('*all', (req,res)=>{
-    res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"))
-})  
+app.use("/api/pin", pinRouter) 
 
 app.listen(port,()=>{
     console.log(`server is running on http://localhost:${port}`)

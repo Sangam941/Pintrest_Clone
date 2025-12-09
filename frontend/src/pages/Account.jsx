@@ -8,7 +8,7 @@ import { UserData } from '../context/UserContext'
 
 const Account = ({ user }) => {
   const { pins } = PinData()
-  const { setisAuth, setuser } = UserData()
+  const { logout } = UserData()
   const navigate = useNavigate()
 
   let userPins
@@ -17,16 +17,7 @@ const Account = ({ user }) => {
   }
 
   const logoutHandler = async () => {
-    try {
-      const { data } = await axios.post('/api/user/logout')
-      toast.success(data.message)
-      navigate('/login')
-      setisAuth(false)
-      setuser([])
-
-    } catch (err) {
-      toast.error(err.response.data.message)
-    }
+    logout(navigate)
   }
   return (
     <div className='flex flex-col items-center justify-center'>

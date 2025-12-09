@@ -1,49 +1,49 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
-import { PinData } from './PinContext';
 
 export const UserAuthContext = createContext()
+
+const api = axios.create({
+    baseURL: import.meta.env.VITE_BASE_URL,
+    withCredentials: true,
+});
 
 export const UserContext = ({ children }) => {
     const [user, setuser] = useState([])
     const [isAuth, setisAuth] = useState(false)
     const [btnLoading, setbtnLoading] = useState(false)
 
-    const {fetchPins} = PinData()
-
-    async function registerUser(name, email, password, navigate){
+    async function registerUser(name, email, password, navigate) {
         setbtnLoading(true)
         try {
-            const { data } = await axios.post("/api/user/register", { name, email, password })
+            const { data } = await api.post("/user/register", { name, email, password })
 
             toast.success(data.message)
-            setuser(data.user)
-
             setisAuth(true)
             setbtnLoading(false)
-            navigate("/")
-            fetchPins()
+            navigate("/login")
         } catch (err) {
-            toast.error(err.response.data.message)
+            toast.error(err.response?.data?.message)
             setbtnLoading(false)
+            setisAuth(false)
         }
     }
 
     async function loginUser(email, password, navigate) {
         setbtnLoading(true)
         try {
-            const { data } = await axios.post("/api/user/login", { email, password })
+            const { data } = await api.post("/user/login", { email, password })
 
             toast.success(data.message)
             setuser(data.user)
             setisAuth(true)
             setbtnLoading(false)
             navigate("/")
-            fetchPins()
         } catch (err) {
-            toast.error(err.response.data.message)
+            toast.error(err.response?.data?.message)
             setbtnLoading(false)
+            setisAuth(false)
         }
     }
 
@@ -51,23 +51,37 @@ export const UserContext = ({ children }) => {
 
     async function fetchUser() {
         try {
-            const { data } = await axios.get("/api/user/profile")
+            const { data } = await api.get("/user/profile")
             setuser(data)
             setisAuth(true)
         } catch (err) {
-            console.log("Not authenticated:", err.message)
+            toast.error(err.response?.data?.message)
+            setisAuth(false)
         } finally {
-            setloading(false) 
+            setloading(false)
         }
     }
 
-    async function followUser(id, fetchUserDetails){
+    async function followUser(id, fetchUserDetails) {
         try {
-            const {data} = await axios.get('/api/user/follow/'+ id)
+            const { data } = await api.get('/user/follow/' + id)
             toast.success(data.message)
             fetchUserDetails()
         } catch (err) {
-            toast.error(err.response.data.message)
+            toast.error(err.response?.data?.message)
+        }
+    }
+
+    const logout = async (navigate) => {
+        try {
+            const { data } = await api.post('/user/logout')
+            toast.success(data.message)
+            navigate('/login')
+            setisAuth(false)
+            setuser([])
+
+        } catch (err) {
+            toast.error(err.response?.data?.message)
         }
     }
 
@@ -77,12 +91,10 @@ export const UserContext = ({ children }) => {
 
 
     return (
-        <div>
-            <UserAuthContext.Provider value={{followUser, setisAuth,setuser, loginUser, registerUser, btnLoading, isAuth, user, loading }}>
-                {children}
-                <Toaster />
-            </UserAuthContext.Provider>
-        </div>
+        <UserAuthContext.Provider value={{ followUser, setisAuth, setuser, loginUser, registerUser, btnLoading, isAuth, user, loading , logout}}>
+            {children}
+        </UserAuthContext.Provider>
+
     )
 }
 

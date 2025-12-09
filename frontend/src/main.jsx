@@ -4,18 +4,20 @@ import './index.css'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import { PinContext } from './context/PinContext.jsx'
-import {UserContext} from './context/UserContext.jsx'
+import { UserContext } from './context/UserContext.jsx'
+import { Toaster } from 'react-hot-toast'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <PinContext>
-      <UserContext>
+    <UserContext>
+      <PinContext>
 
         <BrowserRouter>
+          <Toaster />
           <App />
         </BrowserRouter>
 
-      </UserContext>
-    </PinContext>
+      </PinContext>
+    </UserContext>
   </StrictMode>,
 )

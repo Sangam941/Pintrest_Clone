@@ -4,19 +4,24 @@ import toast, { Toaster } from 'react-hot-toast';
 
 export const PinAuthContext = createContext()
 
+const api = axios.create({
+  baseURL: import.meta.env.VITE_BASE_URL,
+  withCredentials: true,
+});
+
 export const PinContext = ({ children }) => {
   const [pins, setpins] = useState([])
   const [loading, setloading] = useState(true)
 
   async function fetchPins() {
     try {
-      const { data } = await axios.get("/api/pin/allPins")
+      const { data } = await api.get("/pin/allPins")
 
       setpins(data)
       setloading(false)
     } catch (err) {
-      consle.log(err.message)
       setloading(false)
+      toast.error(err.response?.data?.message)
     }
   }
 
@@ -29,13 +34,14 @@ export const PinContext = ({ children }) => {
   async function fetchSinglePins(id) {
     setloading(true)
     try {
-      const { data } = await axios.get("/api/pin/" + id)
+      const { data } = await api.get("/pin/" + id)
 
       setSinglePin(data)
       setloading(false)
 
     } catch (error) {
       console.log(error)
+      toast.error(err.response?.data?.message)
       setloading(false)
     }
   }
@@ -43,50 +49,50 @@ export const PinContext = ({ children }) => {
 
   async function updatePin(id, title, pin, setEdit) {
     try {
-      const { data } = await axios.put("/api/pin/" + id, { title, pin })
+      const { data } = await api.put("/pin/" + id, { title, pin })
 
       toast.success(data.message)
       fetchSinglePins(id)
       setEdit(false)
 
     } catch (err) {
-      toast.error(err.response.data.message)
+      toast.error(err.response?.data?.message)
     }
   }
 
   async function addComment(id, comment) {
     try {
-      const { data } = await axios.post("/api/pin/comment/" + id, { comment })
+      const { data } = await api.post("/pin/comment/" + id, { comment })
       toast.success(data.message)
       fetchSinglePins(id)
 
     } catch (err) {
-      toast.error(err.response.data.message)
+      toast.error(err.response?.data?.message)
     }
   }
 
   async function deleteComment(id, commentId) {
     try {
-      const { data } = await axios.delete(`/api/pin/comment/${id}?commentId=${commentId}`)
+      const { data } = await api.delete(`/pin/comment/${id}?commentId=${commentId}`)
       toast.success(data.message)
       fetchSinglePins(id)
 
     } catch (err) {
-      toast.error(err.response.data.message)
+      toast.error(err.response?.data?.message)
     }
   }
 
   async function deletePin(id, navigate) {
     setloading(true)
     try {
-      const { data } = await axios.delete("/api/pin/" + id)
+      const { data } = await api.delete("/pin/" + id)
       toast.success(data.message)
       navigate("/")
       setloading(false)
       fetchPins()
 
     } catch (err) {
-      toast.error(err.response.data.message)
+      toast.error(err.response?.data?.message)
       setloading(false)
     }
     
@@ -95,7 +101,7 @@ export const PinContext = ({ children }) => {
    async function addPin(formData, setfilePrev, setfile, settitle, setpin, navigate) {
       setloading(true)
       try {
-        const { data } = await axios.post('/api/pin/createPin', formData)
+        const { data } = await api.post('/pin/createPin', formData)
 
         toast.success(data.message)
         setfilePrev('')
@@ -106,18 +112,16 @@ export const PinContext = ({ children }) => {
         navigate('/')
         setloading(false)
       } catch (err) {
-        toast.error(err.response.data.message)
+        toast.error(err.response?.data?.message)
         setloading(false)
       }
 
     }
 
   return (
-    <div>
       <PinAuthContext.Provider value={{ pins,fetchPins , fetchSinglePins, SinglePin, updatePin, addComment, deleteComment, deletePin, addPin }}>
         {children}
       </PinAuthContext.Provider>
-    </div>
   )
 }
 
